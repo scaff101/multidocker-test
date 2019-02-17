@@ -1,0 +1,20 @@
+sudo: required
+services:
+ - docker
+
+before_install:
+ -  docker build -t scaff/multidocker -f ./client/Dockerfile.dev ./client
+ 
+scripts:
+ - docker run scaff/multidocker npm test -- --coverage
+
+after_success:
+ - docker build -t scaff101/multidocker-client ./client
+ - docker build -t scaff101/multidocker-nginx ./nginx
+ - docker build -t scaff101/multidocker-server ./server
+ - docker build -t scaff101/multidocker-worker ./worker
+ - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+ - docker push scaff101/multidocker-client
+ - docker push scaff101/multidocker-nginx
+ - docker push scaff101/multidocker-server
+ - docker push scaff101/multidocker-worker
