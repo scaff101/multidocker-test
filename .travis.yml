@@ -4,8 +4,8 @@ services:
 
 before_install:
  - docker build -t scaff/multidocker -f ./client/Dockerfile.dev ./client
- 
-scripts:
+
+script:
  - docker run scaff/multidocker npm test -- --coverage
 
 after_success:
